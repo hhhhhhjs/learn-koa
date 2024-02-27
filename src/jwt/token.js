@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken'
 
-const sercet = 'HJHJKSDGHKH'
+const sercet = 'HJHJKSDH'
 
 function createToken(id){
     return jwt.sign({
@@ -9,8 +9,8 @@ function createToken(id){
     },sercet)
 }
  
-console.log(createToken('huangos'))
-const t = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOiJodWFuZ29zIiwiZXhwIjoxNzA4NTQwMDkyLCJpYXQiOjE3MDgzMjQwOTJ9.o5g3QZhFXXU8gI61fCPdZLcYWkfFT9KNA9M5CWp79Yk'
+console.log(createToken('heihei'))
+const t = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOiJoZWloZWkiLCJleHAiOjE3MDkxNjA4NTEsImlhdCI6MTcwODk0NDg1MX0.yzrtFjYbzhv5SV8gzWjssf4N7EV7XIgxHwb-vM8hIvQ'
 
 function validtoken(token){
    try{
