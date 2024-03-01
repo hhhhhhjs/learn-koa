@@ -2,6 +2,7 @@ import Koarouter from 'koa-router'
 import path from 'node:path'
 import fs from 'node:fs'
 import { getMimetype } from '../mime/mime.js'
+import { createUser } from '../../database/data.js'
 
 const router =  Koarouter()
 //注册路由表
@@ -56,21 +57,41 @@ router.get('/:filename',(ctx) => {
     }
     
 })
-// router.get('/:filename/:other',(ctx) => {
-//     const filename = ctx.params.filename
-//     const othername = ctx.params.other
-//     console.log(ctx.params)
+router.get('/:filename/:other',(ctx) => {
+    const filename = ctx.params.filename
+    const othername = ctx.params.other
+    console.log(ctx.params)
 
-//     const filepath = path.join(process.cwd(),`picture/dist/${filename}/${othername}`)
+    const filepath = path.join(process.cwd(),`picture/dist/${filename}/${othername}`)
 
-//     console.log(filepath)
-//     ctx.set('Content-Type',getMimetype(othername))
+    console.log(filepath)
+    ctx.set('Content-Type',getMimetype(othername))
    
-//     const fileRS = fs.createReadStream(filepath)
-//     ctx.body = fileRS
-// })
+    const fileRS = fs.createReadStream(filepath)
+    ctx.body = fileRS
+})
 router.post('upload',(ctx) => {
 
+})
+router.post('/api/register/zhuce',async (ctx) => {
+    // 1.获取参数
+    const { username , password } = ctx.request.body
+    // 2.参数校验
+    if(username && password){
+        // 保存用户信息
+        createUser({usernmae:username,password:password})
+        ctx.body = {
+            code:0,
+            msg:'ok',
+            data:null
+        }
+    }else{
+        ctx.body = {
+            code:-1,
+            msg:'用户名不存在或者密码不正确',
+            data:null
+        }
+    }
 })
 export default router
 
