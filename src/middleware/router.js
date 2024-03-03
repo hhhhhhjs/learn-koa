@@ -2,7 +2,8 @@ import Koarouter from 'koa-router'
 import path from 'node:path'
 import fs from 'node:fs'
 import { getMimetype } from '../mime/mime.js'
-import { createUser } from '../../database/data.js'
+import { createUser , getimglist} from '../../database/data.js'
+import { createimg } from '../../database/data.js'
 
 const router =  Koarouter()
 //注册路由表
@@ -79,7 +80,7 @@ router.post('/api/register/zhuce',async (ctx) => {
     // 2.参数校验
     if(username && password){
         // 保存用户信息
-        createUser({usernmae:username,password:password})
+        const result = await createUser({username:username,password:password})
         ctx.body = {
             code:0,
             msg:'ok',
@@ -93,6 +94,53 @@ router.post('/api/register/zhuce',async (ctx) => {
         }
     }
 })
+
+// 获取所有图片
+router.get('/api/img/list', async (ctx) => {
+    const { pageSize, pageNum } = ctx.query
+    const result = await getimglist(pageSize,pageNum)
+    ctx.body = {
+        code:'0',
+        data:result,
+        msg:'ok'
+    }
+})
+// 插入图片
+router.post('/api/img/upload',async (ctx) => {
+    console.log(ctx.request.files.file)
+    const filename = ctx.request.files.file.newFilename
+    console.log(filename)
+    const size = ctx.request.files.file.size
+    const type = ctx.request.files.file.mimetype
+    
+    // 项目上线之后这里的link要换为公网ip地址
+    const link = 'http://127.0.0.1:8080/api/download/'+ filename
+    const imgid = await createimg(filename,size,link)
+    console.log(link)
+    ctx.body = {
+        code:0,
+        msg:'ok',
+        data:{
+            filename,
+            size,
+            type,
+            link,
+            imgid
+        }
+    }
+})
+// 静态托管图片
+router.get('/api/download/:filename',(ctx) => {
+    const filename = ctx.params.filename
+    const filepath = path.join(process.cwd(),`picture/${filename}`)
+    console.log(filepath)
+    ctx.set('Content-Type',getMimetype(filepath))
+
+    const fileRS = fs.createReadStream(filepath)
+    ctx.body = fileRS
+})
+
+
 export default router
 
 

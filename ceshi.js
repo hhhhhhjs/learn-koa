@@ -1,8 +1,3 @@
-const obj = {
-    name:'hj',
-    age:20,
-    height:170
-}
-
-const {age,name,height} = obj
-console.log(age,name,height)
+import path from 'node:path'
+const filepath = path.join(process.cwd(),'picture/index.html')
+console.log(filepath)

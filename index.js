@@ -22,12 +22,12 @@ server.use(koaBody({
             //生成新的文件名
             const fileName = `tuchuang${file.newFilename}`
 
-
             //filepath:  c:/user/dalina/project/beingthink/learn-koa-03/2220909.png
             //file.newFilename
             file.filepath = `${file.filepath.replace(file.newFilename,fileName)}`
             //这里的newfilename是前端传递文件后koa生成的，可以在file.newfilename中查看
             //就是前端上传文件后又生成的name，也就是上面的filename的最后一个文件名
+            file.newFilename = fileName
         }
       }
 }))
